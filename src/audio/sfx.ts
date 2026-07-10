@@ -51,6 +51,14 @@ export class SfxEngine {
     this.muted = muted;
   }
 
+  /** Eagerly creates the AudioContext if it doesn't exist yet. Call this
+   * directly inside a user-gesture event handler (e.g. a button click) so
+   * context creation satisfies the browser's autoplay policy, even before
+   * the first sound actually needs to play. */
+  unlock(): void {
+    this.ensureContext();
+  }
+
   /** Plays `name` at simulation time `now` (any monotonic ms clock), unless
    * muted or throttled by that sound's minimum repeat interval. */
   play(name: SfxName, now: number): void {
