@@ -1,6 +1,6 @@
 import fc from "fast-check";
 import { describe, expect, it } from "vitest";
-import { createRng, randInt } from "./rng";
+import { createRng } from "./rng";
 
 describe("createRng", () => {
   it("produces an identical sequence for the same seed", () => {
@@ -46,41 +46,6 @@ describe("createRng", () => {
           expect(va).toBeLessThan(1);
         }
       }),
-    );
-  });
-});
-
-describe("randInt", () => {
-  it("stays within [min, max)", () => {
-    const rng = createRng("int-bounds");
-    for (let i = 0; i < 500; i++) {
-      const v = randInt(rng, 5, 10);
-      expect(v).toBeGreaterThanOrEqual(5);
-      expect(v).toBeLessThan(10);
-      expect(Number.isInteger(v)).toBe(true);
-    }
-  });
-
-  it("returns min when min and max are equal", () => {
-    const rng = createRng("degenerate-range");
-    expect(randInt(rng, 3, 3)).toBe(3);
-  });
-
-  it("property: always lands in [min, max) for any valid range", () => {
-    fc.assert(
-      fc.property(
-        fc.string({ maxLength: 20 }),
-        fc.integer({ min: -1000, max: 1000 }),
-        fc.integer({ min: 0, max: 1000 }),
-        (seed, min, span) => {
-          const max = min + span + 1; // guarantee max > min
-          const rng = createRng(seed);
-          const v = randInt(rng, min, max);
-          expect(v).toBeGreaterThanOrEqual(min);
-          expect(v).toBeLessThan(max);
-          expect(Number.isInteger(v)).toBe(true);
-        },
-      ),
     );
   });
 });

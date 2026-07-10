@@ -32,8 +32,3 @@ export function createRng(seed: string): () => number {
   const seedFn = xmur3(seed);
   return mulberry32(seedFn());
 }
-
-/** Returns an integer in [min, max), using the given RNG. */
-export function randInt(rng: () => number, min: number, max: number): number {
-  return Math.floor(rng() * (max - min)) + min;
-}
