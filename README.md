@@ -1,5 +1,7 @@
 # Recon
 
+[![CI](https://github.com/ctkrug/recon/actions/workflows/ci.yml/badge.svg)](https://github.com/ctkrug/recon/actions/workflows/ci.yml)
+
 Drop a robot into a fog-covered map it cannot see, and watch it map the unknown
 using real **frontier-based exploration** — the same family of algorithms that
 drives autonomous exploration in real mobile robotics (SLAM frontier planners).
