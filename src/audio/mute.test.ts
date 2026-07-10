@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { loadMutePreference, MuteStorage, saveMutePreference } from "./mute";
+import {
+  createSafeMuteStorage,
+  loadMutePreference,
+  MuteStorage,
+  saveMutePreference,
+} from "./mute";
 
 function fakeStorage(initial: Record<string, string> = {}): MuteStorage {
   const store = new Map(Object.entries(initial));
@@ -36,5 +41,36 @@ describe("saveMutePreference", () => {
     const storage = fakeStorage({ "recon:muted": "true" });
     saveMutePreference(storage, false);
     expect(loadMutePreference(storage)).toBe(false);
+  });
+});
+
+describe("createSafeMuteStorage", () => {
+  it("passes through a working storage untouched", () => {
+    const storage = fakeStorage();
+    const safe = createSafeMuteStorage(() => storage);
+    saveMutePreference(safe, true);
+    expect(loadMutePreference(storage)).toBe(true);
+  });
+
+  it("falls back to an in-memory store when the factory throws", () => {
+    const safe = createSafeMuteStorage(() => {
+      throw new DOMException("blocked", "SecurityError");
+    });
+    expect(() => saveMutePreference(safe, true)).not.toThrow();
+    expect(loadMutePreference(safe)).toBe(true);
+  });
+
+  it("falls back to an in-memory store when getItem throws", () => {
+    const throwingStorage: MuteStorage = {
+      getItem: () => {
+        throw new DOMException("blocked", "SecurityError");
+      },
+      setItem: () => {
+        throw new DOMException("blocked", "SecurityError");
+      },
+    };
+    const safe = createSafeMuteStorage(() => throwingStorage);
+    expect(() => saveMutePreference(safe, true)).not.toThrow();
+    expect(loadMutePreference(safe)).toBe(true);
   });
 });
