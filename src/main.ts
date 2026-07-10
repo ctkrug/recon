@@ -2,6 +2,7 @@ import "./style.css";
 import { clamp01, easeOutCubic, lerp } from "./render/easing";
 import { drawFrame, fitCanvasToContainer } from "./render/canvas";
 import { computeGridDimensions } from "./render/layout";
+import { formatElapsed } from "./render/format";
 import {
   coverage as coverageOf,
   createExploration,
@@ -195,13 +196,6 @@ function render(now: number): void {
   if (!ctx) return;
   const { width, height } = fitCanvasToContainer(canvas);
   drawFrame(ctx, width, height, explorationState.belief, displayRobotPosition(now));
-}
-
-function formatElapsed(ms: number): string {
-  const totalSeconds = Math.floor(ms / 1000);
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
-  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 }
 
 function updateHud(): void {
