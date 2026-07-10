@@ -83,13 +83,13 @@ before anything else.
     themed hover, focus-visible, active, and disabled states — no
     unstyled native widgets ship.
 
-- [ ] **Synth SFX and persistent mute toggle**
+- [x] **Synth SFX and persistent mute toggle**
   - `sensor-ping`, `frontier-lock`, `step`, and `complete` sounds are all
     generated via WebAudio oscillators/noise in code — no audio file
     assets are added to the repo.
   - Toggling mute persists across a page reload via `localStorage`.
 
-- [ ] **Completion celebration overlay**
+- [x] **Completion celebration overlay**
   - On reaching 100% coverage, an overlay appears reporting steps taken,
     elapsed time, and coverage percentage.
   - The overlay's "Explore a new map" button starts a fresh run with a
