@@ -126,6 +126,8 @@ const elapsed = createReadoutRow("Elapsed", "readout-elapsed");
 const statusBanner = document.createElement("p");
 statusBanner.className = "status-banner";
 statusBanner.id = "status-banner";
+statusBanner.setAttribute("role", "status");
+statusBanner.setAttribute("aria-live", "polite");
 statusBanner.textContent = "STANDING BY";
 readoutsWrap.append(coverage.row, steps.row, elapsed.row, statusBanner);
 hud.appendChild(createPanel(readoutsWrap));
