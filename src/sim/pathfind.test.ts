@@ -1,3 +1,4 @@
+import fc from "fast-check";
 import { describe, expect, it } from "vitest";
 import { Cell, OccupancyGrid } from "./grid";
 import { findPath } from "./pathfind";
@@ -58,5 +59,42 @@ describe("findPath", () => {
     grid.set(2, 2, Cell.Free);
     const path = findPath(grid, { x: 0, y: 0 }, { x: 2, y: 2 });
     expect(path).toBeNull();
+  });
+
+  it("property: any returned path only traverses Free cells and is 4-connected end to end", () => {
+    fc.assert(
+      fc.property(
+        fc.integer({ min: 2, max: 12 }),
+        fc.integer({ min: 2, max: 12 }),
+        fc.array(fc.tuple(fc.nat(11), fc.nat(11)), { maxLength: 20 }),
+        fc.nat(11),
+        fc.nat(11),
+        fc.nat(11),
+        fc.nat(11),
+        (width, height, wallCoords, sx, sy, gx, gy) => {
+          const grid = new OccupancyGrid(width, height);
+          for (let y = 0; y < height; y++) for (let x = 0; x < width; x++) grid.set(x, y, Cell.Free);
+          for (const [wx, wy] of wallCoords) grid.set(wx % width, wy % height, Cell.Wall);
+
+          const start = { x: sx % width, y: sy % height };
+          const goal = { x: gx % width, y: gy % height };
+          if (grid.get(start.x, start.y) !== Cell.Free) grid.set(start.x, start.y, Cell.Free);
+          if (grid.get(goal.x, goal.y) !== Cell.Free) grid.set(goal.x, goal.y, Cell.Free);
+
+          const path = findPath(grid, start, goal);
+          if (!path) return;
+
+          expect(path[0]).toEqual(start);
+          expect(path[path.length - 1]).toEqual(goal);
+          for (const p of path) {
+            expect(grid.get(p.x, p.y)).toBe(Cell.Free);
+          }
+          for (let i = 1; i < path.length; i++) {
+            const dist = Math.abs(path[i].x - path[i - 1].x) + Math.abs(path[i].y - path[i - 1].y);
+            expect(dist).toBe(1);
+          }
+        },
+      ),
+    );
   });
 });
