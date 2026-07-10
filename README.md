@@ -41,8 +41,14 @@ two runs ever revealing the map the same way twice.
    and distance from the robot; the robot commits to the best one and paths
    to it (grid A\*) through known-free space, retrying the next-best region
    if the chosen one turns out unreachable.
-5. **Repeat** until no frontiers remain — the map is fully explored, and
-   coverage/steps/elapsed time freeze at their final values.
+5. **Repeat** until no frontiers remain — the map is fully explored,
+   coverage/steps/elapsed time freeze at their final values, and a
+   completion overlay reports the run's stats with a one-click "Explore a
+   new map" restart.
+
+Every sensor sweep, frontier lock, step, and completion plays a short
+WebAudio-synthesized tone (no audio files); a mute toggle in the HUD
+persists across reloads.
 
 See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the module map and
 data flow.
