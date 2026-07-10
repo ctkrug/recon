@@ -2,16 +2,29 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <base href="./" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0a1628" />
     <title>Recon — frontier exploration of a fog-covered map</title>
     <meta
       name="description"
       content="Watch a robot explore a fog-covered map it can't see, using real frontier-based exploration."
     />
-    <link rel="stylesheet" href="/src/style.css" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230a1628'/%3E%3Cg stroke='%234fd1ff' stroke-width='4' fill='none'%3E%3Cpath d='M6 20V6h14'/%3E%3Cpath d='M58 20V6H44'/%3E%3Cpath d='M6 44v14h14'/%3E%3Cpath d='M58 44v14H44'/%3E%3C/g%3E%3Ccircle cx='32' cy='32' r='8' fill='%23ffb547'/%3E%3C/svg%3E"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="src/style.css" />
   </head>
   <body>
     <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
+    <script type="module" src="src/main.ts"></script>
   </body>
 </html>
