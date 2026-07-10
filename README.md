@@ -4,7 +4,7 @@ Drop a robot into a fog-covered map it cannot see, and watch it map the unknown
 using real **frontier-based exploration** — the same family of algorithms that
 drives autonomous exploration in real mobile robotics (SLAM frontier planners).
 No cheating with a pre-known grid: the robot only knows what its simulated
-sensor has actually swept, and it has to reason about where the map *might*
+sensor has actually swept, and it has to reason about where the map _might_
 still open up.
 
 ## Why
@@ -12,7 +12,7 @@ still open up.
 Most "pathfinding visualizer" projects show a robot finding the shortest route
 across a map it can already see in full. That's a solved, saturated genre.
 Recon is different on purpose: the map starts as solid fog, and the robot's
-job is to figure out *where to look next*. Frontiers — the boundary cells
+job is to figure out _where to look next_. Frontiers — the boundary cells
 between known-free space and unknown space — are detected live from the
 robot's accumulated occupancy grid, clustered, scored, and the nearest/best
 one is chosen as the next exploration target. The fog peels back organically

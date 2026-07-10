@@ -8,8 +8,8 @@ before anything else.
 ## Epic 1 — Core Exploration Engine (the wow moment)
 
 - [ ] **Frontier-based autonomous exploration on a fog-covered map** — the
-  core wow moment: the map starts as solid fog and the robot explores it
-  live using real frontier detection, not a pre-known path.
+      core wow moment: the map starts as solid fog and the robot explores it
+      live using real frontier detection, not a pre-known path.
   - Starting a run renders the entire map as opaque fog except the robot's
     start cell.
   - Pressing start moves the robot autonomously with no further input,
@@ -106,7 +106,7 @@ before anything else.
 - [ ] **CI-verified static production build deployable under a subpath**
   - `npm run build` produces a `dist/` directory that serves and runs
     correctly under a non-root base path (e.g. `vite preview --base
-    /recon/`), matching the `apps.charliekrug.com/recon` deployment
+/recon/`), matching the `apps.charliekrug.com/recon` deployment
     target.
   - The GitHub Actions CI workflow runs lint, typecheck, tests, and the
     build on every push and pull request, and is green on `main`.

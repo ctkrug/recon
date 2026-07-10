@@ -11,8 +11,8 @@ built a hundred times.
 
 Real exploration — the kind an actual robot (or a Mars rover, or a SLAM
 stack) has to do — is a different, harder problem: you don't know the map
-exists beyond what your sensor has swept, and you have to *decide where to
-look next* using only that partial knowledge. That decision problem (frontier
+exists beyond what your sensor has swept, and you have to _decide where to
+look next_ using only that partial knowledge. That decision problem (frontier
 detection + selection) is the interesting part, and almost nobody visualizes
 it.
 
@@ -30,15 +30,15 @@ fog**. Every tick:
 
 1. The robot's simulated sensor sweeps a radius (or field of view) around its
    current position and reveals whatever's really there (free space or
-   walls) into the robot's own occupancy grid — a grid *only the robot
-   maintains*, never the ground truth.
+   walls) into the robot's own occupancy grid — a grid _only the robot
+   maintains_, never the ground truth.
 2. **Frontier cells** — free cells adjacent to at least one unknown cell —
    are detected from that occupancy grid and clustered into contiguous
    frontier regions.
 3. Each frontier region is scored (a mix of region size and distance from
    the robot — bigger, closer frontiers are more attractive) and the
    robot commits to the best one.
-4. The robot paths to that frontier through *known* free space (grid A\*)
+4. The robot paths to that frontier through _known_ free space (grid A\*)
    and repeats.
 5. Exploration ends when no frontier regions remain — every reachable cell
    has been swept.
@@ -59,7 +59,7 @@ every frame.
   Canvas dependency, so it's unit-testable in isolation and the rendering
   layer is a thin, swappable consumer of its state.
 - **Frontier clustering, not single-cell targeting.** Individual frontier
-  *cells* are noisy; clustering them into regions before scoring is what
+  _cells_ are noisy; clustering them into regions before scoring is what
   makes the robot's choices look purposeful instead of jittery.
 - **Deterministic seeding.** Maps are generated from a seed so a run can be
   replayed or shared, and so tests can assert exact outcomes.

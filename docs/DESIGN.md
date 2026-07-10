@@ -15,19 +15,20 @@ monospace readouts.
 
 ## 2. Tokens
 
-| Token | Value | Use |
-|---|---|---|
-| `--bg` | `#0a1628` | page background — blueprint navy |
-| `--surface-1` | `#0f2038` | HUD panel background |
-| `--surface-2` | `#142a4a` | raised panel / active control background |
-| `--text` | `#e8f0fa` | primary text |
-| `--text-muted` | `#7f97b8` | labels, secondary readouts |
-| `--accent` | `#4fd1ff` | schematic cyan — grid lines, known/free cells, focus rings |
-| `--accent-support` | `#ffb547` | amber — robot, frontier highlight, active sensor sweep |
-| `--success` | `#5ee6a0` | exploration complete |
-| `--danger` | `#ff6b6b` | blocked / error state |
+| Token              | Value     | Use                                                        |
+| ------------------ | --------- | ---------------------------------------------------------- |
+| `--bg`             | `#0a1628` | page background — blueprint navy                           |
+| `--surface-1`      | `#0f2038` | HUD panel background                                       |
+| `--surface-2`      | `#142a4a` | raised panel / active control background                   |
+| `--text`           | `#e8f0fa` | primary text                                               |
+| `--text-muted`     | `#7f97b8` | labels, secondary readouts                                 |
+| `--accent`         | `#4fd1ff` | schematic cyan — grid lines, known/free cells, focus rings |
+| `--accent-support` | `#ffb547` | amber — robot, frontier highlight, active sensor sweep     |
+| `--success`        | `#5ee6a0` | exploration complete                                       |
+| `--danger`         | `#ff6b6b` | blocked / error state                                      |
 
 **Type pairing**
+
 - Display: **Space Mono** (Google Fonts, weight 700) — wordmark, section
   headings, the coverage-% readout. Fallback: `"Courier New", monospace`.
 - UI: **Inter** (Google Fonts, weights 400/500/600) — body copy, control
