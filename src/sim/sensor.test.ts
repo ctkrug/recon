@@ -1,3 +1,4 @@
+import fc from "fast-check";
 import { describe, expect, it } from "vitest";
 import { Cell, OccupancyGrid } from "./grid";
 import { sweep, traceLine } from "./sensor";
@@ -75,5 +76,32 @@ describe("sweep", () => {
     const truth = openGrid(4, 4);
     const belief = new OccupancyGrid(4, 4);
     expect(() => sweep(truth, belief, { x: 0, y: 0 }, 5)).not.toThrow();
+  });
+
+  it("property: never reveals any cell farther than `range` from the robot", () => {
+    fc.assert(
+      fc.property(
+        fc.integer({ min: 3, max: 20 }),
+        fc.integer({ min: 3, max: 20 }),
+        fc.integer({ min: 0, max: 8 }),
+        fc.nat(19),
+        fc.nat(19),
+        (width, height, range, rx, ry) => {
+          const truth = openGrid(width, height);
+          const belief = new OccupancyGrid(width, height);
+          const robot = { x: rx % width, y: ry % height };
+
+          sweep(truth, belief, robot, range);
+
+          for (let y = 0; y < height; y++) {
+            for (let x = 0; x < width; x++) {
+              if (belief.get(x, y) === Cell.Unknown) continue;
+              const dist = Math.hypot(x - robot.x, y - robot.y);
+              expect(dist).toBeLessThanOrEqual(range + 1e-9);
+            }
+          }
+        },
+      ),
+    );
   });
 });
