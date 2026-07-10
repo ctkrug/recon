@@ -52,4 +52,11 @@ describe("findPath", () => {
     const path = findPath(grid, { x: 0, y: 0 }, { x: 2, y: 2 });
     expect(path).toBeNull();
   });
+
+  it("returns null when the start cell itself is not known-free", () => {
+    const grid = new OccupancyGrid(3, 3); // all Unknown
+    grid.set(2, 2, Cell.Free);
+    const path = findPath(grid, { x: 0, y: 0 }, { x: 2, y: 2 });
+    expect(path).toBeNull();
+  });
 });
