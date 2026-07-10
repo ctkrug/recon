@@ -1,3 +1,4 @@
+import fc from "fast-check";
 import { describe, expect, it } from "vitest";
 import { Cell, OccupancyGrid } from "./grid";
 import { floodFillReachable } from "./mapgen";
@@ -140,6 +141,46 @@ describe("coverage", () => {
       status: "idle",
     };
     expect(coverage(state)).toBe(1);
+  });
+
+  it("property: always stays within [0, 1] regardless of how much of the reachable set is known", () => {
+    fc.assert(
+      fc.property(
+        fc.integer({ min: 1, max: 12 }),
+        fc.integer({ min: 1, max: 12 }),
+        fc.array(fc.boolean(), { minLength: 1, maxLength: 144 }),
+        (width, height, knownFlags) => {
+          const groundTruth = new OccupancyGrid(width, height);
+          for (let y = 0; y < height; y++) for (let x = 0; x < width; x++) groundTruth.set(x, y, Cell.Free);
+          const reachableCells = floodFillReachable(groundTruth, { x: 0, y: 0 });
+
+          const belief = new OccupancyGrid(width, height);
+          const keys = [...reachableCells];
+          keys.forEach((key, i) => {
+            if (knownFlags[i % knownFlags.length]) {
+              const [x, y] = key.split(",").map(Number);
+              belief.set(x, y, Cell.Free);
+            }
+          });
+
+          const state: ExplorationState = {
+            seed: "bounds-check",
+            sensorRange: 1,
+            groundTruth,
+            belief,
+            reachableCells,
+            robot: { x: 0, y: 0 },
+            path: [],
+            steps: 0,
+            status: "idle",
+          };
+
+          const c = coverage(state);
+          expect(c).toBeGreaterThanOrEqual(0);
+          expect(c).toBeLessThanOrEqual(1);
+        },
+      ),
+    );
   });
 });
 
