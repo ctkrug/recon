@@ -60,6 +60,13 @@ describe("createSafeMuteStorage", () => {
     expect(loadMutePreference(safe)).toBe(true);
   });
 
+  it("defaults to unmuted from the in-memory fallback before anything is saved", () => {
+    const safe = createSafeMuteStorage(() => {
+      throw new DOMException("blocked", "SecurityError");
+    });
+    expect(loadMutePreference(safe)).toBe(false);
+  });
+
   it("falls back to an in-memory store when getItem throws", () => {
     const throwingStorage: MuteStorage = {
       getItem: () => {
