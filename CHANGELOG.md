@@ -17,3 +17,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Playable app: blueprint-HUD canvas renderer, coverage/steps/elapsed
   readouts, and start/pause/restart/speed/seed controls.
 - `docs/ARCHITECTURE.md` documenting the module map and data flow.
+- Synth SFX (sensor-ping, frontier-lock, step, complete) generated from
+  WebAudio oscillators, with a mute toggle persisted to `localStorage`.
+- A completion celebration overlay reporting steps/elapsed/coverage on
+  reaching 100%, with an "Explore a new map" CTA.
