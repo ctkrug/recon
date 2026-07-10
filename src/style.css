@@ -419,3 +419,81 @@ input[type="text"]:disabled {
 .status-banner[data-status="done"] {
   color: var(--success);
 }
+
+.celebration {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3);
+  background: rgba(10, 22, 40, 0.82);
+  animation: celebration-fade-in 200ms ease-out;
+}
+
+.celebration[hidden] {
+  display: none;
+}
+
+.celebration-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  max-width: 22rem;
+  width: 100%;
+  padding: var(--space-5) var(--space-4);
+  text-align: center;
+  background: var(--surface-1);
+  border-color: var(--success);
+  box-shadow: 0 0 32px rgba(94, 230, 160, 0.25);
+}
+
+.celebration-panel .tick-tl {
+  border-color: var(--success);
+}
+
+.celebration-panel .tick-tr {
+  border-color: var(--success);
+}
+
+.celebration-panel .tick-bl {
+  border-color: var(--success);
+}
+
+.celebration-panel .tick-br {
+  border-color: var(--success);
+}
+
+.celebration-title {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  letter-spacing: 0.12em;
+  margin: 0;
+  color: var(--success);
+  text-shadow: 0 0 12px rgba(94, 230, 160, 0.45);
+}
+
+.celebration-panel .readouts {
+  width: 100%;
+}
+
+.celebration-cta {
+  width: 100%;
+}
+
+@keyframes celebration-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .celebration {
+    animation: none;
+  }
+}
