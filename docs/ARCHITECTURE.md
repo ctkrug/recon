@@ -25,7 +25,9 @@ src/
   audio/          synth SFX — pure logic is unit-tested; sfx.ts's WebAudio calls aren't
     throttle.ts    shouldThrottle() — per-sound minimum repeat interval, given a clock value
     mute.ts        load/saveMutePreference() — localStorage persistence via an injectable
-                  storage param
+                  storage param; createSafeMuteStorage() wraps a throwing storage source
+                  (blocked/sandboxed localStorage) with an in-memory fallback so a hostile
+                  embedding context can't crash startup
     sfx.ts         SfxEngine: generates sensor-ping/step/frontier-lock/complete tones from
                   oscillators via an injectable AudioContext factory (real browser context
                   by default, tests inject a fake). The context is created lazily — on the
@@ -103,12 +105,28 @@ styled in `style.css`) whenever `status === "done"`, populating it via
 `render/format.ts`'s `formatCelebrationStats()`. Its CTA calls the same
 `startNewMap()` helper as the HUD's "New map" button.
 
+The status banner (`STANDING BY` / `EXPLORING` / `PAUSED` / `MAP FULLY
+EXPLORED`) is a `role="status"` / `aria-live="polite"` region, so screen
+readers get every state transition announced without needing focus to move.
+
 ## Coverage
 
 `explorer.coverage()` divides known-Free cells (in `belief`, intersected
 with the reachable set) by the total reachable-Free cell count computed
 once at map generation via `mapgen.floodFillReachable`. Exploration is
 "done" when no frontier region remains reachable from the robot.
+
+## Testing strategy
+
+`sim/` is exercised by both example-based tests and property-based tests
+(`fast-check`) — the latter generate random grid sizes, wall layouts, seeds,
+and start/goal pairs to pin invariants (e.g. "a path never steps on a
+non-Free cell", "coverage never leaves [0, 1]", "sweep never reveals past
+`range`") that a handful of fixed examples can't fully cover. `main.ts` and
+`render/canvas.ts` are DOM/Canvas-coupled and intentionally excluded from
+unit tests; they're verified by manually driving the built app in a browser
+instead (see the QA ledger in the project's commit history for what's been
+checked).
 
 ## Running it
 
