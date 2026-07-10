@@ -35,11 +35,11 @@ export function createExploration(
   height: number,
   sensorRange: number,
 ): ExplorationState {
-  const { groundTruth, start, reachable: reachableCells } = generateMap(
-    width,
-    height,
-    seed,
-  );
+  const {
+    groundTruth,
+    start,
+    reachable: reachableCells,
+  } = generateMap(width, height, seed);
 
   const belief = new OccupancyGrid(width, height);
   belief.set(start.x, start.y, Cell.Free);

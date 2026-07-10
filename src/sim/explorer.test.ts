@@ -72,7 +72,8 @@ describe("step", () => {
     // frontier) but is itself the only candidate target — planNextFrontier
     // must reject it (no self-targeting) and report no plan, not loop.
     const groundTruth = new OccupancyGrid(5, 5);
-    for (let y = 1; y < 4; y++) for (let x = 1; x < 4; x++) groundTruth.set(x, y, Cell.Free);
+    for (let y = 1; y < 4; y++)
+      for (let x = 1; x < 4; x++) groundTruth.set(x, y, Cell.Free);
     const robot = { x: 2, y: 2 };
     const belief = new OccupancyGrid(5, 5);
 
@@ -151,7 +152,8 @@ describe("coverage", () => {
         fc.array(fc.boolean(), { minLength: 1, maxLength: 144 }),
         (width, height, knownFlags) => {
           const groundTruth = new OccupancyGrid(width, height);
-          for (let y = 0; y < height; y++) for (let x = 0; x < width; x++) groundTruth.set(x, y, Cell.Free);
+          for (let y = 0; y < height; y++)
+            for (let x = 0; x < width; x++) groundTruth.set(x, y, Cell.Free);
           const reachableCells = floodFillReachable(groundTruth, { x: 0, y: 0 });
 
           const belief = new OccupancyGrid(width, height);

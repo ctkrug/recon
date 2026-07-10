@@ -74,10 +74,13 @@ describe("clusterFrontiers", () => {
   it("property: every input cell appears in exactly one output cluster", () => {
     fc.assert(
       fc.property(
-        fc.uniqueArray(fc.tuple(fc.integer({ min: 0, max: 15 }), fc.integer({ min: 0, max: 15 })), {
-          maxLength: 30,
-          selector: ([x, y]) => `${x},${y}`,
-        }),
+        fc.uniqueArray(
+          fc.tuple(fc.integer({ min: 0, max: 15 }), fc.integer({ min: 0, max: 15 })),
+          {
+            maxLength: 30,
+            selector: ([x, y]) => `${x},${y}`,
+          },
+        ),
         (coords) => {
           const cells = coords.map(([x, y]) => ({ x, y }));
           const clusters = clusterFrontiers(cells);
@@ -124,7 +127,10 @@ describe("scoreFrontierRegion", () => {
         (size, distance) => {
           const cluster = Array.from({ length: size }, () => ({ x: distance, y: 0 }));
           const robot = { x: 0, y: 0 };
-          expect(scoreFrontierRegion(cluster, robot)).toBeCloseTo(size - distance * 0.5, 10);
+          expect(scoreFrontierRegion(cluster, robot)).toBeCloseTo(
+            size - distance * 0.5,
+            10,
+          );
         },
       ),
     );

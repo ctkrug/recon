@@ -73,12 +73,14 @@ describe("findPath", () => {
         fc.nat(11),
         (width, height, wallCoords, sx, sy, gx, gy) => {
           const grid = new OccupancyGrid(width, height);
-          for (let y = 0; y < height; y++) for (let x = 0; x < width; x++) grid.set(x, y, Cell.Free);
+          for (let y = 0; y < height; y++)
+            for (let x = 0; x < width; x++) grid.set(x, y, Cell.Free);
           for (const [wx, wy] of wallCoords) grid.set(wx % width, wy % height, Cell.Wall);
 
           const start = { x: sx % width, y: sy % height };
           const goal = { x: gx % width, y: gy % height };
-          if (grid.get(start.x, start.y) !== Cell.Free) grid.set(start.x, start.y, Cell.Free);
+          if (grid.get(start.x, start.y) !== Cell.Free)
+            grid.set(start.x, start.y, Cell.Free);
           if (grid.get(goal.x, goal.y) !== Cell.Free) grid.set(goal.x, goal.y, Cell.Free);
 
           const path = findPath(grid, start, goal);
@@ -90,7 +92,8 @@ describe("findPath", () => {
             expect(grid.get(p.x, p.y)).toBe(Cell.Free);
           }
           for (let i = 1; i < path.length; i++) {
-            const dist = Math.abs(path[i].x - path[i - 1].x) + Math.abs(path[i].y - path[i - 1].y);
+            const dist =
+              Math.abs(path[i].x - path[i - 1].x) + Math.abs(path[i].y - path[i - 1].y);
             expect(dist).toBe(1);
           }
         },
