@@ -1,5 +1,30 @@
 :root {
   color-scheme: dark;
+
+  --bg: #0a1628;
+  --surface-1: #0f2038;
+  --surface-2: #142a4a;
+  --text: #e8f0fa;
+  --text-muted: #7f97b8;
+  --accent: #4fd1ff;
+  --accent-support: #ffb547;
+  --success: #5ee6a0;
+  --danger: #ff6b6b;
+
+  --font-display: "Space Mono", "Courier New", monospace;
+  --font-ui: "Inter", system-ui, sans-serif;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --space-5: 32px;
+  --space-6: 48px;
+  --space-7: 64px;
+
+  --radius: 2px;
+  --transition-ui: 150ms ease-out;
+  --transition-tween: 100ms ease-out;
 }
 
 * {
@@ -10,9 +35,16 @@ html,
 body {
   margin: 0;
   height: 100%;
-  background: #0a0a0a;
-  color: #e8e8e8;
-  font-family: system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+}
+
+body {
+  background-image:
+    radial-gradient(ellipse at top left, rgba(79, 209, 255, 0.06), transparent 60%),
+    radial-gradient(ellipse at bottom right, rgba(255, 181, 71, 0.04), transparent 55%);
+  background-attachment: fixed;
 }
 
 #app {
@@ -21,6 +53,18 @@ body {
   min-height: 100%;
 }
 
-canvas {
-  display: block;
+.layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: var(--space-3);
+  gap: var(--space-3);
+}
+
+@media (min-width: 900px) {
+  .layout {
+    flex-direction: row;
+    padding: var(--space-4);
+    gap: var(--space-4);
+  }
 }
