@@ -65,10 +65,11 @@ data flow.
 
 ## Status
 
-The core exploration engine (Epic 1) is built and playable end to end: press
-Start and the fog peels back live as the robot senses, detects frontiers,
-plans, and moves. See [`docs/VISION.md`](docs/VISION.md) for the full design
-and [`docs/BACKLOG.md`](docs/BACKLOG.md) for the build plan.
+Feature-complete: press Start and the fog peels back live as the robot
+senses, detects frontiers, plans, and moves, with playback controls, synth
+SFX, and a completion celebration overlay. See
+[`docs/VISION.md`](docs/VISION.md) for the full design and
+[`docs/BACKLOG.md`](docs/BACKLOG.md) for the build plan (all epics shipped).
 
 ## Development
 
