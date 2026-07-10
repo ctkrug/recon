@@ -1,3 +1,4 @@
+import fc from "fast-check";
 import { describe, expect, it } from "vitest";
 import { Cell, OccupancyGrid } from "./grid";
 import { floodFillReachable, generateMap, smooth } from "./mapgen";
@@ -137,5 +138,30 @@ describe("floodFillReachable", () => {
     const grid = new OccupancyGrid(3, 3);
     const reachable = floodFillReachable(grid, { x: 1, y: 1 });
     expect(reachable.size).toBe(0);
+  });
+
+  it("property: every reachable cell is actually Free on the grid it was computed from", () => {
+    fc.assert(
+      fc.property(
+        fc.integer({ min: 1, max: 15 }),
+        fc.integer({ min: 1, max: 15 }),
+        fc.array(fc.tuple(fc.nat(14), fc.nat(14)), { maxLength: 40 }),
+        fc.nat(14),
+        fc.nat(14),
+        (width, height, wallCoords, sx, sy) => {
+          const grid = new OccupancyGrid(width, height);
+          for (let y = 0; y < height; y++) for (let x = 0; x < width; x++) grid.set(x, y, Cell.Free);
+          for (const [wx, wy] of wallCoords) grid.set(wx % width, wy % height, Cell.Wall);
+
+          const start = { x: sx % width, y: sy % height };
+          const reachable = floodFillReachable(grid, start);
+
+          for (const key of reachable) {
+            const [x, y] = key.split(",").map(Number);
+            expect(grid.get(x, y)).toBe(Cell.Free);
+          }
+        },
+      ),
+    );
   });
 });
