@@ -24,7 +24,12 @@ function countWallNeighbors(grid: OccupancyGrid, x: number, y: number): number {
   return count;
 }
 
-function smooth(grid: OccupancyGrid): OccupancyGrid {
+/** One cellular-automaton pass: a cell becomes Wall when at least
+ * `BIRTH_THRESHOLD` of its 8 neighbors are non-Free (including out-of-bounds,
+ * which `OccupancyGrid.get` reports as Wall), otherwise Free. Border cells
+ * are always Wall regardless of neighbor count. Exported for direct
+ * boundary testing — the exact threshold shapes the generated caves. */
+export function smooth(grid: OccupancyGrid): OccupancyGrid {
   const next = new OccupancyGrid(grid.width, grid.height);
   for (let y = 0; y < grid.height; y++) {
     for (let x = 0; x < grid.width; x++) {

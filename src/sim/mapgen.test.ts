@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { Cell, OccupancyGrid } from "./grid";
-import { floodFillReachable, generateMap } from "./mapgen";
+import { floodFillReachable, generateMap, smooth } from "./mapgen";
 
 describe("generateMap", () => {
   it("produces an identical grid for the same seed and dimensions", () => {
@@ -62,6 +62,48 @@ describe("generateMap", () => {
       const { start, reachableCount } = generateMap(w, h, "tiny-map");
       expect(reachableCount).toBe(0);
       expect(start).toEqual({ x: Math.floor(w / 2), y: Math.floor(h / 2) });
+    }
+  });
+});
+
+describe("smooth", () => {
+  it("births a wall when a cell has exactly the birth threshold of wall neighbors", () => {
+    const grid = new OccupancyGrid(5, 5);
+    for (let y = 0; y < 5; y++) for (let x = 0; x < 5; x++) grid.set(x, y, Cell.Free);
+    // (2,2) gets exactly 5 of its 8 neighbors as Wall — the birth threshold.
+    for (const n of [
+      { x: 1, y: 1 },
+      { x: 2, y: 1 },
+      { x: 3, y: 1 },
+      { x: 1, y: 2 },
+      { x: 3, y: 2 },
+    ]) {
+      grid.set(n.x, n.y, Cell.Wall);
+    }
+    expect(smooth(grid).get(2, 2)).toBe(Cell.Wall);
+  });
+
+  it("keeps a cell free with one fewer than the birth threshold", () => {
+    const grid = new OccupancyGrid(5, 5);
+    for (let y = 0; y < 5; y++) for (let x = 0; x < 5; x++) grid.set(x, y, Cell.Free);
+    for (const n of [
+      { x: 1, y: 1 },
+      { x: 2, y: 1 },
+      { x: 3, y: 1 },
+      { x: 1, y: 2 },
+    ]) {
+      grid.set(n.x, n.y, Cell.Wall);
+    }
+    expect(smooth(grid).get(2, 2)).toBe(Cell.Free);
+  });
+
+  it("always forces border cells to Wall regardless of neighbor state", () => {
+    const grid = new OccupancyGrid(4, 4);
+    for (let y = 0; y < 4; y++) for (let x = 0; x < 4; x++) grid.set(x, y, Cell.Free);
+    const next = smooth(grid);
+    for (let x = 0; x < 4; x++) {
+      expect(next.get(x, 0)).toBe(Cell.Wall);
+      expect(next.get(x, 3)).toBe(Cell.Wall);
     }
   });
 });
