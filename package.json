@@ -5,6 +5,24 @@
   "type": "module",
   "private": true,
   "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ctkrug/recon.git"
+  },
+  "homepage": "https://github.com/ctkrug/recon#readme",
+  "bugs": {
+    "url": "https://github.com/ctkrug/recon/issues"
+  },
+  "keywords": [
+    "frontier-exploration",
+    "canvas",
+    "visualization",
+    "robotics-simulation",
+    "typescript"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
