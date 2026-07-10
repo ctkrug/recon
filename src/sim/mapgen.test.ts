@@ -48,6 +48,22 @@ describe("generateMap", () => {
     const { reachableCount } = generateMap(48, 32, "reachable-check");
     expect(reachableCount).toBeGreaterThan(0);
   });
+
+  it("degrades gracefully instead of throwing for degenerate tiny dimensions", () => {
+    // 1x1 and 2x2 grids are all border, so every cell is Wall and no Free
+    // cell exists anywhere — nearestFreeCell's spiral search exhausts the
+    // grid and falls back to the unclamped center point.
+    for (const [w, h] of [
+      [0, 0],
+      [1, 1],
+      [2, 2],
+    ]) {
+      expect(() => generateMap(w, h, "tiny-map")).not.toThrow();
+      const { start, reachableCount } = generateMap(w, h, "tiny-map");
+      expect(reachableCount).toBe(0);
+      expect(start).toEqual({ x: Math.floor(w / 2), y: Math.floor(h / 2) });
+    }
+  });
 });
 
 describe("floodFillReachable", () => {
