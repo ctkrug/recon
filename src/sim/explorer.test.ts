@@ -26,6 +26,17 @@ describe("createExploration", () => {
     expect(a.robot).toEqual(b.robot);
     expect(a.reachableCells.size).toBe(b.reachableCells.size);
   });
+
+  it("handles a degenerate 1x1 map without throwing and finishes instantly", () => {
+    let state = start(createExploration("degenerate", 1, 1, 3));
+    let iterations = 0;
+    while (state.status === "running" && iterations < 100) {
+      state = step(state);
+      iterations++;
+    }
+    expect(state.status).toBe("done");
+    expect(coverage(state)).toBeCloseTo(1);
+  });
 });
 
 describe("step", () => {
