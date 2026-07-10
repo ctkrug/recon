@@ -30,6 +30,26 @@ describe("traceLine", () => {
       { x: 3, y: 3 },
     ]);
   });
+
+  it("property: always starts and ends at the given endpoints and never jumps more than one cell per axis", () => {
+    fc.assert(
+      fc.property(
+        fc.integer({ min: -30, max: 30 }),
+        fc.integer({ min: -30, max: 30 }),
+        fc.integer({ min: -30, max: 30 }),
+        fc.integer({ min: -30, max: 30 }),
+        (x0, y0, x1, y1) => {
+          const points = traceLine(x0, y0, x1, y1);
+          expect(points[0]).toEqual({ x: x0, y: y0 });
+          expect(points[points.length - 1]).toEqual({ x: x1, y: y1 });
+          for (let i = 1; i < points.length; i++) {
+            expect(Math.abs(points[i].x - points[i - 1].x)).toBeLessThanOrEqual(1);
+            expect(Math.abs(points[i].y - points[i - 1].y)).toBeLessThanOrEqual(1);
+          }
+        },
+      ),
+    );
+  });
 });
 
 describe("sweep", () => {
