@@ -28,19 +28,24 @@ re-clustered every step, and the fog visibly peels away in an organic,
 uneven front — like watching a Metroidvania map fill itself in, live, with no
 two runs ever revealing the map the same way twice.
 
-## How it works (planned)
+## How it works
 
 1. **Occupancy grid** — the robot maintains its own grid of `unknown` /
    `free` / `wall` cells, built up entirely from what its sensor has swept.
-2. **Simulated sensor** — a ray-cast (or Bresenham) sweep from the robot's
-   current position each tick reveals cells up to sensor range or the first
-   wall hit.
+2. **Simulated sensor** — a Bresenham line-of-sight sweep from the robot's
+   current position each tick reveals cells up to sensor range, occluded by
+   the first wall hit along each line.
 3. **Frontier detection** — cells that are `free` and adjacent to `unknown`
    are frontier cells; they're clustered into contiguous frontier regions.
-4. **Frontier scoring & selection** — each frontier region is scored (size,
-   distance from the robot, information-gain heuristic); the robot commits to
-   the best one and paths to it (grid A\*) through known-free space.
-5. **Repeat** until no frontiers remain — the map is fully explored.
+4. **Frontier scoring & selection** — each frontier region is scored on size
+   and distance from the robot; the robot commits to the best one and paths
+   to it (grid A\*) through known-free space, retrying the next-best region
+   if the chosen one turns out unreachable.
+5. **Repeat** until no frontiers remain — the map is fully explored, and
+   coverage/steps/elapsed time freeze at their final values.
+
+See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the module map and
+data flow.
 
 ## Stack
 
@@ -54,7 +59,9 @@ two runs ever revealing the map the same way twice.
 
 ## Status
 
-Early scaffold — see [`docs/VISION.md`](docs/VISION.md) for the full design
+The core exploration engine (Epic 1) is built and playable end to end: press
+Start and the fog peels back live as the robot senses, detects frontiers,
+plans, and moves. See [`docs/VISION.md`](docs/VISION.md) for the full design
 and [`docs/BACKLOG.md`](docs/BACKLOG.md) for the build plan.
 
 ## Development
