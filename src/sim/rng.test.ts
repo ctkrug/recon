@@ -1,3 +1,4 @@
+import fc from "fast-check";
 import { describe, expect, it } from "vitest";
 import { createRng, randInt } from "./rng";
 
@@ -31,6 +32,22 @@ describe("createRng", () => {
     const rng = createRng("");
     expect(() => rng()).not.toThrow();
   });
+
+  it("property: any string seed (including unicode/emoji) is deterministic and bounded", () => {
+    fc.assert(
+      fc.property(fc.string({ maxLength: 200 }), (seed) => {
+        const a = createRng(seed);
+        const b = createRng(seed);
+        for (let i = 0; i < 20; i++) {
+          const va = a();
+          const vb = b();
+          expect(va).toBe(vb);
+          expect(va).toBeGreaterThanOrEqual(0);
+          expect(va).toBeLessThan(1);
+        }
+      }),
+    );
+  });
 });
 
 describe("randInt", () => {
@@ -47,5 +64,23 @@ describe("randInt", () => {
   it("returns min when min and max are equal", () => {
     const rng = createRng("degenerate-range");
     expect(randInt(rng, 3, 3)).toBe(3);
+  });
+
+  it("property: always lands in [min, max) for any valid range", () => {
+    fc.assert(
+      fc.property(
+        fc.string({ maxLength: 20 }),
+        fc.integer({ min: -1000, max: 1000 }),
+        fc.integer({ min: 0, max: 1000 }),
+        (seed, min, span) => {
+          const max = min + span + 1; // guarantee max > min
+          const rng = createRng(seed);
+          const v = randInt(rng, min, max);
+          expect(v).toBeGreaterThanOrEqual(min);
+          expect(v).toBeLessThan(max);
+          expect(Number.isInteger(v)).toBe(true);
+        },
+      ),
+    );
   });
 });
