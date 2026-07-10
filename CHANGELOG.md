@@ -21,3 +21,16 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   WebAudio oscillators, with a mute toggle persisted to `localStorage`.
 - A completion celebration overlay reporting steps/elapsed/coverage on
   reaching 100%, with an "Explore a new map" CTA.
+- Property-based tests (`fast-check`) for the simulation core's key
+  invariants: grid bounds, RNG determinism/range, path traversal validity,
+  frontier clustering/scoring, reachability, sensor range, and coverage
+  bounds.
+
+### Fixed
+
+- The app no longer crashes at startup if `localStorage` throws (blocked
+  by a sandboxed embed or a strict privacy setting) — the mute preference
+  falls back to an in-memory store for that session instead.
+- The HUD status readout now announces state changes (`role="status"`,
+  `aria-live="polite"`) instead of updating silently for screen readers.
+- The page now has a `<main>` landmark.
