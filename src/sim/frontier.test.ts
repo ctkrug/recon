@@ -115,6 +115,20 @@ describe("scoreFrontierRegion", () => {
       scoreFrontierRegion(nearTiny, robot),
     );
   });
+
+  it("property: score exactly matches size*1 - nearestDistance*0.5", () => {
+    fc.assert(
+      fc.property(
+        fc.integer({ min: 1, max: 30 }),
+        fc.integer({ min: 0, max: 50 }),
+        (size, distance) => {
+          const cluster = Array.from({ length: size }, () => ({ x: distance, y: 0 }));
+          const robot = { x: 0, y: 0 };
+          expect(scoreFrontierRegion(cluster, robot)).toBeCloseTo(size - distance * 0.5, 10);
+        },
+      ),
+    );
+  });
 });
 
 describe("selectBestFrontierTarget", () => {
