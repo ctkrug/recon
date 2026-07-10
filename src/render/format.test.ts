@@ -1,3 +1,4 @@
+import fc from "fast-check";
 import { describe, expect, it } from "vitest";
 import { formatCelebrationStats, formatElapsed } from "./format";
 
@@ -20,6 +21,21 @@ describe("formatElapsed", () => {
 
   it("rolls minutes past 59 seconds", () => {
     expect(formatElapsed(125_000)).toBe("2:05");
+  });
+
+  it("property: always matches m:ss with a two-digit, sub-60 seconds field", () => {
+    fc.assert(
+      fc.property(fc.integer({ min: 0, max: 100 * 60 * 60 * 1000 }), (ms) => {
+        const formatted = formatElapsed(ms);
+        const match = formatted.match(/^(\d+):(\d{2})$/);
+        expect(match).not.toBeNull();
+        const seconds = Number(match![2]);
+        expect(seconds).toBeGreaterThanOrEqual(0);
+        expect(seconds).toBeLessThan(60);
+        const totalSeconds = Number(match![1]) * 60 + seconds;
+        expect(totalSeconds).toBe(Math.floor(ms / 1000));
+      }),
+    );
   });
 });
 
