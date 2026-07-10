@@ -11,6 +11,12 @@ describe("cellFillColor", () => {
     ]);
     expect(colors.size).toBe(3);
   });
+
+  it("falls back to the background color for an out-of-range cell value", () => {
+    // The belief grid is a raw Uint8Array; a corrupted or foreign value
+    // outside the Cell enum must render as fog, never throw or draw undefined.
+    expect(cellFillColor(99 as Cell)).toBe(cellFillColor(Cell.Unknown));
+  });
 });
 
 describe("cellGridLineColor", () => {
