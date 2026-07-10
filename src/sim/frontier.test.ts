@@ -1,3 +1,4 @@
+import fc from "fast-check";
 import { describe, expect, it } from "vitest";
 import { Cell, OccupancyGrid } from "./grid";
 import {
@@ -68,6 +69,27 @@ describe("clusterFrontiers", () => {
 
   it("returns an empty list for no cells", () => {
     expect(clusterFrontiers([])).toEqual([]);
+  });
+
+  it("property: every input cell appears in exactly one output cluster", () => {
+    fc.assert(
+      fc.property(
+        fc.uniqueArray(fc.tuple(fc.integer({ min: 0, max: 15 }), fc.integer({ min: 0, max: 15 })), {
+          maxLength: 30,
+          selector: ([x, y]) => `${x},${y}`,
+        }),
+        (coords) => {
+          const cells = coords.map(([x, y]) => ({ x, y }));
+          const clusters = clusterFrontiers(cells);
+
+          const clusteredKeys = clusters.flat().map((c) => `${c.x},${c.y}`);
+          const inputKeys = cells.map((c) => `${c.x},${c.y}`);
+
+          expect(clusteredKeys.length).toBe(inputKeys.length);
+          expect(new Set(clusteredKeys)).toEqual(new Set(inputKeys));
+        },
+      ),
+    );
   });
 });
 
