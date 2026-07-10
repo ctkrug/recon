@@ -28,7 +28,8 @@ function smooth(grid: OccupancyGrid): OccupancyGrid {
   const next = new OccupancyGrid(grid.width, grid.height);
   for (let y = 0; y < grid.height; y++) {
     for (let x = 0; x < grid.width; x++) {
-      const isBorder = x === 0 || y === 0 || x === grid.width - 1 || y === grid.height - 1;
+      const isBorder =
+        x === 0 || y === 0 || x === grid.width - 1 || y === grid.height - 1;
       if (isBorder) {
         next.set(x, y, Cell.Wall);
         continue;

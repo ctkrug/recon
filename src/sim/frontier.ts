@@ -91,7 +91,10 @@ export function scoreFrontierRegion(cluster: Point[], robot: Point): number {
 /** Picks the highest-scoring frontier cluster and returns the cell within it
  * nearest to the robot as the path-planning target. Returns null when there
  * are no frontiers left (exploration is complete). */
-export function selectBestFrontierTarget(clusters: Point[][], robot: Point): Point | null {
+export function selectBestFrontierTarget(
+  clusters: Point[][],
+  robot: Point,
+): Point | null {
   if (clusters.length === 0) return null;
 
   let best = clusters[0];

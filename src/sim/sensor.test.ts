@@ -4,7 +4,8 @@ import { sweep, traceLine } from "./sensor";
 
 function openGrid(width: number, height: number): OccupancyGrid {
   const grid = new OccupancyGrid(width, height);
-  for (let y = 0; y < height; y++) for (let x = 0; x < width; x++) grid.set(x, y, Cell.Free);
+  for (let y = 0; y < height; y++)
+    for (let x = 0; x < width; x++) grid.set(x, y, Cell.Free);
   return grid;
 }
 

@@ -1,6 +1,12 @@
 import { Cell, OccupancyGrid } from "./grid";
 import { floodFillReachable, generateMap } from "./mapgen";
-import { clusterFrontiers, findFrontierCells, Point, scoreFrontierRegion, selectBestFrontierTarget } from "./frontier";
+import {
+  clusterFrontiers,
+  findFrontierCells,
+  Point,
+  scoreFrontierRegion,
+  selectBestFrontierTarget,
+} from "./frontier";
 import { findPath } from "./pathfind";
 import { sweep } from "./sensor";
 

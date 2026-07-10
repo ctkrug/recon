@@ -1,7 +1,15 @@
 import { describe, expect, it } from "vitest";
 import { Cell, OccupancyGrid } from "./grid";
 import { floodFillReachable } from "./mapgen";
-import { coverage, createExploration, ExplorationState, pause, restart, start, step } from "./explorer";
+import {
+  coverage,
+  createExploration,
+  ExplorationState,
+  pause,
+  restart,
+  start,
+  step,
+} from "./explorer";
 
 describe("createExploration", () => {
   it("starts idle with only the robot's start cell known", () => {
@@ -50,7 +58,8 @@ describe("step", () => {
 describe("coverage", () => {
   it("matches a hand-checked value on a small fixture map", () => {
     const groundTruth = new OccupancyGrid(3, 3);
-    for (let y = 0; y < 3; y++) for (let x = 0; x < 3; x++) groundTruth.set(x, y, Cell.Free);
+    for (let y = 0; y < 3; y++)
+      for (let x = 0; x < 3; x++) groundTruth.set(x, y, Cell.Free);
 
     const robotStart = { x: 1, y: 1 };
     const reachableCells = floodFillReachable(groundTruth, robotStart); // all 9 cells

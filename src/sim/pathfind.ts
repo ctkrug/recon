@@ -20,7 +20,11 @@ const NEIGHBOR_OFFSETS = [
  * mapped as Free are traversable, so the path never cuts through unknown or
  * wall space. Returns null when no such path exists (goal unreachable from
  * what's currently known). */
-export function findPath(belief: OccupancyGrid, start: Point, goal: Point): Point[] | null {
+export function findPath(
+  belief: OccupancyGrid,
+  start: Point,
+  goal: Point,
+): Point[] | null {
   if (start.x === goal.x && start.y === goal.y) return [{ x: start.x, y: start.y }];
   if (belief.get(goal.x, goal.y) !== Cell.Free) return null;
   if (belief.get(start.x, start.y) !== Cell.Free) return null;

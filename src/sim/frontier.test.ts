@@ -89,7 +89,9 @@ describe("scoreFrontierRegion", () => {
     const nearTiny = [{ x: 1, y: 0 }]; // size 1, distance 1
     const farHuge = Array.from({ length: 20 }, (_, i) => ({ x: 5 + i, y: 0 })); // size 20, distance 5
     const robot = { x: 0, y: 0 };
-    expect(scoreFrontierRegion(farHuge, robot)).toBeGreaterThan(scoreFrontierRegion(nearTiny, robot));
+    expect(scoreFrontierRegion(farHuge, robot)).toBeGreaterThan(
+      scoreFrontierRegion(nearTiny, robot),
+    );
   });
 });
 

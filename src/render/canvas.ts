@@ -9,7 +9,10 @@ export interface RobotDisplayPosition {
 /** Resizes a canvas's backing store to match its CSS box at the device
  * pixel ratio, so the map renders crisp on retina and stays correct after
  * the container is resized. Returns the CSS-pixel size used for drawing. */
-export function fitCanvasToContainer(canvas: HTMLCanvasElement): { width: number; height: number } {
+export function fitCanvasToContainer(canvas: HTMLCanvasElement): {
+  width: number;
+  height: number;
+} {
   const dpr = window.devicePixelRatio || 1;
   const cssWidth = canvas.clientWidth;
   const cssHeight = canvas.clientHeight;
@@ -40,7 +43,10 @@ export function drawFrame(
   ctx.fillStyle = tokens.bg;
   ctx.fillRect(0, 0, cssWidth, cssHeight);
 
-  const cellSize = Math.max(1, Math.floor(Math.min(cssWidth / belief.width, cssHeight / belief.height)));
+  const cellSize = Math.max(
+    1,
+    Math.floor(Math.min(cssWidth / belief.width, cssHeight / belief.height)),
+  );
   const offsetX = Math.floor((cssWidth - cellSize * belief.width) / 2);
   const offsetY = Math.floor((cssHeight - cellSize * belief.height) / 2);
 
