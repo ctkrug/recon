@@ -2,7 +2,7 @@ import "./style.css";
 import { clamp01, easeOutCubic, lerp } from "./render/easing";
 import { drawFrame, fitCanvasToContainer } from "./render/canvas";
 import { computeGridDimensions } from "./render/layout";
-import { formatElapsed } from "./render/format";
+import { formatCelebrationStats, formatElapsed } from "./render/format";
 import { loadMutePreference, saveMutePreference } from "./audio/mute";
 import { SfxEngine } from "./audio/sfx";
 import {
@@ -69,6 +69,39 @@ stage.appendChild(canvas);
 const radarSweep = document.createElement("div");
 radarSweep.className = "radar-sweep";
 stage.appendChild(radarSweep);
+
+// --- Completion celebration overlay ---
+const celebration = document.createElement("div");
+celebration.className = "celebration";
+celebration.hidden = true;
+
+const celebrationPanel = document.createElement("div");
+celebrationPanel.className = "celebration-panel panel";
+celebrationPanel.append(...ticks(4));
+
+const celebrationTitle = document.createElement("h2");
+celebrationTitle.className = "celebration-title";
+celebrationTitle.textContent = "MAP FULLY EXPLORED";
+
+const celebrationStatsEl = document.createElement("div");
+celebrationStatsEl.className = "readouts";
+const celebrationSteps = createReadoutRow("Steps", "celebration-steps");
+const celebrationElapsed = createReadoutRow("Elapsed", "celebration-elapsed");
+const celebrationCoverage = createReadoutRow("Coverage", "celebration-coverage");
+celebrationStatsEl.append(
+  celebrationSteps.row,
+  celebrationElapsed.row,
+  celebrationCoverage.row,
+);
+
+const celebrationCta = document.createElement("button");
+celebrationCta.className = "primary celebration-cta";
+celebrationCta.id = "celebration-new-map-btn";
+celebrationCta.textContent = "Explore a new map";
+
+celebrationPanel.append(celebrationTitle, celebrationStatsEl, celebrationCta);
+celebration.appendChild(celebrationPanel);
+stage.appendChild(celebration);
 
 // --- HUD rail ---
 const hud = document.createElement("aside");
@@ -243,6 +276,18 @@ function updateHud(): void {
   startPauseBtn.textContent = explorationState.status === "running" ? "Pause" : "Start";
   startPauseBtn.disabled = done;
   radarSweep.style.display = explorationState.status === "idle" ? "block" : "none";
+
+  celebration.hidden = !done;
+  if (done) {
+    const stats = formatCelebrationStats({
+      steps: explorationState.steps,
+      elapsedMs,
+      coverage: coverageOf(explorationState),
+    });
+    celebrationSteps.value.textContent = stats.steps;
+    celebrationElapsed.value.textContent = stats.elapsed;
+    celebrationCoverage.value.textContent = stats.coverage;
+  }
 }
 
 function resetTiming(): void {
@@ -291,11 +336,14 @@ restartBtn.addEventListener("click", () => {
   resetTiming();
 });
 
-newMapBtn.addEventListener("click", () => {
+function startNewMap(): void {
   explorationState = restart(explorationState, randomSeed());
   seedInput.value = explorationState.seed;
   resetTiming();
-});
+}
+
+newMapBtn.addEventListener("click", startNewMap);
+celebrationCta.addEventListener("click", startNewMap);
 
 function applySeedInput(): void {
   const value = seedInput.value.trim();
