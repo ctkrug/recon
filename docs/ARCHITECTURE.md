@@ -21,8 +21,18 @@ src/
     easing.ts      easeOutCubic/lerp for the robot's cell-to-cell tween
     layout.ts      computeGridDimensions() — matches map aspect ratio to the stage container
     canvas.ts      the actual canvas draw calls (fog/grid/robot) + backing-store resize
-  main.ts         entrypoint: builds the DOM (stage + HUD), owns the simulation loop and
-                  all UI event wiring (start/pause/restart/speed/seed)
+    format.ts      formatElapsed() + formatCelebrationStats() for HUD/overlay readouts
+  audio/          synth SFX — pure logic is unit-tested; sfx.ts's WebAudio calls aren't
+    throttle.ts    shouldThrottle() — per-sound minimum repeat interval, given a clock value
+    mute.ts        load/saveMutePreference() — localStorage persistence via an injectable
+                  storage param
+    sfx.ts         SfxEngine: generates sensor-ping/step/frontier-lock/complete tones from
+                  oscillators via an injectable AudioContext factory (real browser context
+                  by default, tests inject a fake). The context is created lazily — on the
+                  first play(), or explicitly via unlock() from inside a click handler — to
+                  satisfy the autoplay policy.
+  main.ts         entrypoint: builds the DOM (stage + HUD + completion overlay), owns the
+                  simulation loop and all UI event wiring (start/pause/restart/speed/seed/mute)
   style.css       design tokens (docs/DESIGN.md) + all component styling
 ```
 
@@ -76,6 +86,22 @@ The map's grid dimensions are computed once at startup from the stage
 container's own aspect ratio (`render/layout.ts`), so the generated map
 always fills the canvas edge-to-edge with the whole map visible — no
 letterboxing, no cropped-off regions.
+
+## SFX and the completion overlay
+
+Each `applyStep()` call in `main.ts` compares the exploration state before
+and after `explorer.step()` and fires an `SfxEngine.play()` accordingly:
+`sensor-ping` every tick, `frontier-lock` when the robot just committed to a
+newly-chosen frontier (the path was exhausted before this step), otherwise
+`step` for an ordinary move along the current path, and `complete` on the
+tick that flips `status` to `"done"`. The engine itself is muted/unmuted via
+a HUD button whose state round-trips through `audio/mute.ts` and
+`localStorage`.
+
+`updateHud()` shows the `.celebration` overlay (defined in `main.ts`,
+styled in `style.css`) whenever `status === "done"`, populating it via
+`render/format.ts`'s `formatCelebrationStats()`. Its CTA calls the same
+`startNewMap()` helper as the HUD's "New map" button.
 
 ## Coverage
 
