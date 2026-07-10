@@ -3,6 +3,8 @@ import { clamp01, easeOutCubic, lerp } from "./render/easing";
 import { drawFrame, fitCanvasToContainer } from "./render/canvas";
 import { computeGridDimensions } from "./render/layout";
 import { formatElapsed } from "./render/format";
+import { loadMutePreference, saveMutePreference } from "./audio/mute";
+import { SfxEngine } from "./audio/sfx";
 import {
   coverage as coverageOf,
   createExploration,
@@ -107,7 +109,10 @@ startPauseBtn.textContent = "Start";
 const restartBtn = document.createElement("button");
 restartBtn.id = "restart-btn";
 restartBtn.textContent = "Restart";
-buttonRow.append(startPauseBtn, restartBtn);
+const muteBtn = document.createElement("button");
+muteBtn.className = "toggle";
+muteBtn.id = "mute-btn";
+buttonRow.append(startPauseBtn, restartBtn, muteBtn);
 
 const speedField = document.createElement("div");
 speedField.className = "field";
@@ -168,6 +173,15 @@ let tickAccumulatorMs = 0;
 let lastFrameTime: number | null = null;
 let speedTicksPerSecond = mapSpeed(Number(speedSlider.value));
 
+const sfx = new SfxEngine(loadMutePreference(localStorage));
+
+function updateMuteButton(): void {
+  const muted = sfx.isMuted();
+  muteBtn.textContent = muted ? "Unmute" : "Mute";
+  muteBtn.setAttribute("aria-pressed", String(muted));
+}
+updateMuteButton();
+
 function mapSpeed(sliderValue: number): number {
   const t = (sliderValue - 1) / 9;
   return MIN_TICKS_PER_SECOND + t * (MAX_TICKS_PER_SECOND - MIN_TICKS_PER_SECOND);
@@ -175,10 +189,20 @@ function mapSpeed(sliderValue: number): number {
 
 function applyStep(): void {
   const before = explorationState.robot;
+  const pathWasExhausted = explorationState.path.length <= 1;
+  const wasDone = explorationState.status === "done";
+  const now = performance.now();
+
   explorationState = step(explorationState);
+  sfx.play("sensor-ping", now);
+
   if (explorationState.robot !== before) {
     prevRobotPos = { x: before.x, y: before.y };
-    tweenStartTime = performance.now();
+    tweenStartTime = now;
+    sfx.play(pathWasExhausted ? "frontier-lock" : "step", now);
+  }
+  if (!wasDone && explorationState.status === "done") {
+    sfx.play("complete", now);
   }
 }
 
@@ -248,10 +272,17 @@ function frame(now: number): void {
 }
 
 startPauseBtn.addEventListener("click", () => {
+  sfx.unlock();
   explorationState =
     explorationState.status === "running"
       ? pause(explorationState)
       : start(explorationState);
+});
+
+muteBtn.addEventListener("click", () => {
+  sfx.setMuted(!sfx.isMuted());
+  saveMutePreference(localStorage, sfx.isMuted());
+  updateMuteButton();
 });
 
 restartBtn.addEventListener("click", () => {

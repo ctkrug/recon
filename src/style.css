@@ -276,6 +276,13 @@ button.primary:disabled {
   box-shadow: none;
 }
 
+button.toggle[aria-pressed="true"] {
+  background: var(--surface-2);
+  border-color: var(--accent-support);
+  color: var(--accent-support);
+  box-shadow: 0 0 12px var(--accent-support);
+}
+
 .field {
   display: flex;
   flex-direction: column;
