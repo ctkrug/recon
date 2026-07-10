@@ -11,10 +11,28 @@ interface ToneSpec {
 }
 
 const TONES: Record<SfxName, ToneSpec> = {
-  "sensor-ping": { type: "sine", freqStart: 1800, freqEnd: 2200, durationMs: 60, gain: 0.05 },
+  "sensor-ping": {
+    type: "sine",
+    freqStart: 1800,
+    freqEnd: 2200,
+    durationMs: 60,
+    gain: 0.05,
+  },
   step: { type: "square", freqStart: 220, durationMs: 30, gain: 0.03 },
-  "frontier-lock": { type: "triangle", freqStart: 440, freqEnd: 660, durationMs: 120, gain: 0.06 },
-  complete: { type: "sawtooth", freqStart: 523.25, freqEnd: 1046.5, durationMs: 500, gain: 0.08 },
+  "frontier-lock": {
+    type: "triangle",
+    freqStart: 440,
+    freqEnd: 660,
+    durationMs: 120,
+    gain: 0.06,
+  },
+  complete: {
+    type: "sawtooth",
+    freqStart: 523.25,
+    freqEnd: 1046.5,
+    durationMs: 500,
+    gain: 0.08,
+  },
 };
 
 /** Resolves a browser AudioContext, including Safari's prefixed name, or
@@ -38,7 +56,10 @@ export class SfxEngine {
   private readonly contextFactory: () => AudioContext | null;
   private lastPlayedAt: Partial<Record<SfxName, number>> = {};
 
-  constructor(muted = false, contextFactory: () => AudioContext | null = createBrowserAudioContext) {
+  constructor(
+    muted = false,
+    contextFactory: () => AudioContext | null = createBrowserAudioContext,
+  ) {
     this.muted = muted;
     this.contextFactory = contextFactory;
   }

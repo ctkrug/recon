@@ -36,7 +36,11 @@ function fakeAudioContext() {
     }),
     createGain: vi.fn(() => fakeGain()),
   };
-  return { ctx: ctx as unknown as AudioContext, oscillators, createOscillator: ctx.createOscillator };
+  return {
+    ctx: ctx as unknown as AudioContext,
+    oscillators,
+    createOscillator: ctx.createOscillator,
+  };
 }
 
 describe("SfxEngine", () => {
