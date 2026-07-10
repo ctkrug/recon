@@ -53,6 +53,33 @@ describe("step", () => {
     expect(state.status).toBe("done");
     expect(coverage(state)).toBeCloseTo(1);
   });
+
+  it("finishes instantly when the only frontier cell is the robot's own cell", () => {
+    // A zero-range sensor reveals nothing beyond the robot's own cell, so
+    // after the sweep the robot's cell is Free-bordering-Unknown (a
+    // frontier) but is itself the only candidate target — planNextFrontier
+    // must reject it (no self-targeting) and report no plan, not loop.
+    const groundTruth = new OccupancyGrid(5, 5);
+    for (let y = 1; y < 4; y++) for (let x = 1; x < 4; x++) groundTruth.set(x, y, Cell.Free);
+    const robot = { x: 2, y: 2 };
+    const belief = new OccupancyGrid(5, 5);
+
+    const state: ExplorationState = {
+      seed: "self-frontier",
+      sensorRange: 0,
+      groundTruth,
+      belief,
+      reachableCells: floodFillReachable(groundTruth, robot),
+      robot,
+      path: [],
+      steps: 0,
+      status: "running",
+    };
+
+    const next = step(state);
+    expect(next.status).toBe("done");
+    expect(next.steps).toBe(0);
+  });
 });
 
 describe("coverage", () => {
@@ -111,6 +138,22 @@ describe("start/pause/restart", () => {
     const running = start(idle);
     expect(running.status).toBe("running");
     expect(start(running)).toBe(running);
+  });
+
+  it("pause on an idle (never-started) exploration is a no-op", () => {
+    const idle = createExploration("idle-pause", 16, 12, 3);
+    expect(pause(idle)).toBe(idle);
+  });
+
+  it("pause on an already-done exploration is a no-op", () => {
+    let state = start(createExploration("done-pause", 16, 12, 3));
+    let iterations = 0;
+    while (state.status === "running" && iterations < 5000) {
+      state = step(state);
+      iterations++;
+    }
+    expect(state.status).toBe("done");
+    expect(pause(state)).toBe(state);
   });
 
   it("pause halts a running exploration and preserves belief state", () => {
