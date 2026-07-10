@@ -97,6 +97,28 @@ describe("SfxEngine", () => {
     expect(() => engine.play("complete", 1000)).not.toThrow();
   });
 
+  it("unlock() eagerly creates the context without playing a sound", () => {
+    const { ctx, oscillators } = fakeAudioContext();
+    const factory = vi.fn(() => ctx);
+    const engine = new SfxEngine(false, factory);
+
+    engine.unlock();
+
+    expect(factory).toHaveBeenCalledTimes(1);
+    expect(oscillators).toHaveLength(0);
+  });
+
+  it("unlock() does not create a second context if play() already did", () => {
+    const { ctx } = fakeAudioContext();
+    const factory = vi.fn(() => ctx);
+    const engine = new SfxEngine(false, factory);
+
+    engine.play("step", 1000);
+    engine.unlock();
+
+    expect(factory).toHaveBeenCalledTimes(1);
+  });
+
   it("toggles and reports mute state", () => {
     const engine = new SfxEngine(false, () => fakeAudioContext().ctx);
     expect(engine.isMuted()).toBe(false);
