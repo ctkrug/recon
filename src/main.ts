@@ -3,7 +3,7 @@ import { clamp01, easeOutCubic, lerp } from "./render/easing";
 import { drawFrame, fitCanvasToContainer } from "./render/canvas";
 import { computeGridDimensions } from "./render/layout";
 import { formatCelebrationStats, formatElapsed } from "./render/format";
-import { loadMutePreference, saveMutePreference } from "./audio/mute";
+import { createSafeMuteStorage, loadMutePreference, saveMutePreference } from "./audio/mute";
 import { SfxEngine } from "./audio/sfx";
 import {
   coverage as coverageOf,
@@ -206,7 +206,8 @@ let tickAccumulatorMs = 0;
 let lastFrameTime: number | null = null;
 let speedTicksPerSecond = mapSpeed(Number(speedSlider.value));
 
-const sfx = new SfxEngine(loadMutePreference(localStorage));
+const muteStorage = createSafeMuteStorage(() => localStorage);
+const sfx = new SfxEngine(loadMutePreference(muteStorage));
 
 function updateMuteButton(): void {
   const muted = sfx.isMuted();
@@ -326,7 +327,7 @@ startPauseBtn.addEventListener("click", () => {
 
 muteBtn.addEventListener("click", () => {
   sfx.setMuted(!sfx.isMuted());
-  saveMutePreference(localStorage, sfx.isMuted());
+  saveMutePreference(muteStorage, sfx.isMuted());
   updateMuteButton();
 });
 
