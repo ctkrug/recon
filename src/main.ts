@@ -1,6 +1,7 @@
 import "./style.css";
 import { clamp01, easeOutCubic, lerp } from "./render/easing";
 import { drawFrame, fitCanvasToContainer } from "./render/canvas";
+import { computeGridDimensions } from "./render/layout";
 import {
   coverage as coverageOf,
   createExploration,
@@ -10,8 +11,6 @@ import {
   step,
 } from "./sim/explorer";
 
-const GRID_WIDTH = 64;
-const GRID_HEIGHT = 40;
 const SENSOR_RANGE = 6;
 
 function randomSeed(): string {
@@ -149,10 +148,14 @@ const MIN_TICKS_PER_SECOND = 1;
 const MAX_TICKS_PER_SECOND = 15;
 const MAX_FRAME_DT_MS = 250;
 
+const { width: gridWidth, height: gridHeight } = computeGridDimensions(
+  stage.clientWidth,
+  stage.clientHeight,
+);
 let explorationState = createExploration(
   randomSeed(),
-  GRID_WIDTH,
-  GRID_HEIGHT,
+  gridWidth,
+  gridHeight,
   SENSOR_RANGE,
 );
 seedInput.value = explorationState.seed;
