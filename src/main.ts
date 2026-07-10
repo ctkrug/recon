@@ -3,7 +3,11 @@ import { clamp01, easeOutCubic, lerp } from "./render/easing";
 import { drawFrame, fitCanvasToContainer } from "./render/canvas";
 import { computeGridDimensions } from "./render/layout";
 import { formatCelebrationStats, formatElapsed } from "./render/format";
-import { createSafeMuteStorage, loadMutePreference, saveMutePreference } from "./audio/mute";
+import {
+  createSafeMuteStorage,
+  loadMutePreference,
+  saveMutePreference,
+} from "./audio/mute";
 import { SfxEngine } from "./audio/sfx";
 import {
   coverage as coverageOf,
@@ -180,6 +184,23 @@ seedField.append(seedLabel, seedRow);
 
 controls.append(buttonRow, speedField, seedField);
 hud.appendChild(createPanel(controls));
+
+function externalLink(href: string, text: string): HTMLAnchorElement {
+  const a = document.createElement("a");
+  a.href = href;
+  a.target = "_blank";
+  a.rel = "noopener";
+  a.textContent = text;
+  return a;
+}
+
+const hudLinks = document.createElement("div");
+hudLinks.className = "hud-links";
+hudLinks.append(
+  externalLink("https://github.com/ctkrug/recon", "View source"),
+  externalLink("https://apps.charliekrug.com", "More by Charlie Krug"),
+);
+hud.appendChild(hudLinks);
 
 layout.append(stage, hud);
 app.appendChild(layout);

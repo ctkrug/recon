@@ -5,11 +5,17 @@
     <base href="./" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#0a1628" />
-    <title>Recon — frontier exploration of a fog-covered map</title>
+    <title>Recon — watch a robot map the unknown</title>
     <meta
       name="description"
-      content="Watch a robot explore a fog-covered map it can't see, using real frontier-based exploration."
+      content="Watch a robot explore a fog-covered map it can't see, using real frontier-based exploration. A live TypeScript and Canvas visualization."
     />
+    <meta property="og:title" content="Recon — watch a robot map the unknown" />
+    <meta
+      property="og:description"
+      content="A robot explores a fog-covered map it can't see, using real frontier-based exploration. The fog peels back live as it maps the unknown."
+    />
+    <meta property="og:type" content="website" />
     <link
       rel="icon"
       type="image/svg+xml"
@@ -25,6 +31,83 @@
   </head>
   <body>
     <main id="app"></main>
+
+    <section class="about" aria-label="About Recon">
+      <div class="about-inner">
+        <div class="panel about-panel">
+          <span class="tick tick-tl"></span>
+          <span class="tick tick-tr"></span>
+          <span class="tick tick-bl"></span>
+          <span class="tick tick-br"></span>
+          <h2>Frontier exploration, running in your browser</h2>
+          <p>
+            Recon is a live visualization of frontier-based exploration, the technique
+            real mobile robots use to map a space they have never seen. There is no
+            pre-known grid: the robot builds its own map purely from what its simulated
+            sensor sweeps, and every step it has to decide where to look next. Press Start
+            and the fog above peels back cell by cell as the robot works.
+          </p>
+          <p>
+            A <strong>frontier</strong> is the boundary between mapped-free space and the
+            unknown: any free cell that still touches an unexplored one. Recon detects
+            those frontiers live, groups the adjacent ones into regions, and scores each
+            region by how large and how close it is. The robot commits to the best region,
+            plans a path to it through space it has already mapped, sweeps, and repeats
+            until nothing unknown is reachable. Because the choice is driven by the map
+            rather than a script, no two seeds explore the same way.
+          </p>
+        </div>
+
+        <div class="panel about-panel">
+          <span class="tick tick-tl"></span>
+          <span class="tick tick-tr"></span>
+          <span class="tick tick-bl"></span>
+          <span class="tick tick-br"></span>
+          <h2>Questions</h2>
+          <dl class="faq">
+            <dt>What is frontier-based exploration?</dt>
+            <dd>
+              A strategy for exploring an unknown map by repeatedly heading to the nearest
+              useful frontier, the edge between what you have mapped and what you have
+              not. It is a standard building block of autonomous robot mapping and SLAM.
+            </dd>
+            <dt>Does the robot know the map in advance?</dt>
+            <dd>
+              No. It only knows what its sensor has swept. The rendering draws the robot's
+              own belief grid, so what you see on screen is exactly what the robot knows,
+              never the hidden ground truth.
+            </dd>
+            <dt>Is the map the same every time?</dt>
+            <dd>
+              Each map is generated from a seed. The same seed and size always produce the
+              same map, so a run you like can be reproduced. Press New map for a fresh
+              random seed, or type your own.
+            </dd>
+            <dt>Does it make sound?</dt>
+            <dd>
+              Yes. Each sweep, frontier lock, step, and completion plays a short tone
+              synthesized in code with the Web Audio API, so there are no audio files. The
+              mute toggle is remembered between visits.
+            </dd>
+            <dt>Is Recon open source?</dt>
+            <dd>
+              Yes, it is MIT licensed. The simulation core and this page are on
+              <a href="https://github.com/ctkrug/recon">GitHub</a>.
+            </dd>
+          </dl>
+        </div>
+
+        <div class="about-cta">
+          <a class="cta-button" href="https://github.com/ctkrug/recon">View on GitHub</a>
+        </div>
+      </div>
+    </section>
+
+    <footer class="page-footer">
+      More by Charlie Krug →
+      <a href="https://apps.charliekrug.com">apps.charliekrug.com</a>
+    </footer>
+
     <script type="module" src="src/main.ts"></script>
   </body>
 </html>
