@@ -7,7 +7,7 @@ before anything else.
 
 ## Epic 1 — Core Exploration Engine (the wow moment)
 
-- [ ] **Frontier-based autonomous exploration on a fog-covered map** — the
+- [x] **Frontier-based autonomous exploration on a fog-covered map** — the
       core wow moment: the map starts as solid fog and the robot explores it
       live using real frontier detection, not a pre-known path.
   - Starting a run renders the entire map as opaque fog except the robot's
@@ -17,26 +17,26 @@ before anything else.
   - The frontier set (free cells adjacent to unknown cells) is recomputed
     each step from the robot's own occupancy grid, never from ground truth.
 
-- [ ] **Simulated sensor sweep reveals fog**
+- [x] **Simulated sensor sweep reveals fog**
   - Each tick, cells within sensor range along an unobstructed line of
     sight from the robot's position transition from unknown to free/wall
     in the occupancy grid.
   - A wall cell occludes the sweep — cells directly behind it from the
     robot's viewpoint stay unknown that tick.
 
-- [ ] **Frontier clustering and scoring**
+- [x] **Frontier clustering and scoring**
   - Adjacent frontier cells are grouped into one frontier region rather
     than scored as independent targets.
   - Given two frontier regions of different size and distance, a unit test
     confirms the scoring function picks the intended higher-scored region.
 
-- [ ] **Grid-based path planning to the chosen frontier**
+- [x] **Grid-based path planning to the chosen frontier**
   - The robot's computed path to a chosen frontier only traverses cells
     marked free in its own occupancy grid (never unknown or wall cells).
   - If the chosen frontier becomes unreachable mid-path, the robot
     recomputes a new frontier target instead of stalling.
 
-- [ ] **Exploration termination and coverage reporting**
+- [x] **Exploration termination and coverage reporting**
   - When no frontier regions remain, autonomous movement stops and a
     "fully explored" state is reported.
   - Coverage % is computed as known cells / total reachable cells and
@@ -44,19 +44,19 @@ before anything else.
 
 ## Epic 2 — Map & Playback Controls
 
-- [ ] **Seeded map generation**
+- [x] **Seeded map generation**
   - Entering the same seed twice produces an identical ground-truth map,
     verified by a unit test comparing two generated grids cell-for-cell.
   - A "randomize seed" control generates a new map and resets all
     exploration state.
 
-- [ ] **Playback speed control**
+- [x] **Playback speed control**
   - A speed control changes simulation ticks-per-second without
     restarting the current exploration run.
   - At the minimum speed setting, the simulation still visibly advances
     within 2 seconds (never effectively paused).
 
-- [ ] **Pause, resume, and restart**
+- [x] **Pause, resume, and restart**
   - Pausing mid-run halts robot movement and fog reveal until resumed,
     with all occupancy-grid state preserved across the pause.
   - Restart clears the occupancy grid and robot position but reuses the
@@ -64,18 +64,18 @@ before anything else.
 
 ## Epic 3 — HUD, Visualization & Design Polish
 
-- [ ] **Fog-of-war rendering driven directly by grid state**
+- [x] **Fog-of-war rendering driven directly by grid state**
   - Every render frame, each cell's color/opacity is derived directly from
     the occupancy grid's unknown/free/wall value — no separate "revealed"
     flag that could desync from the grid.
 
-- [ ] **HUD readouts — coverage, steps, elapsed time**
+- [x] **HUD readouts — coverage, steps, elapsed time**
   - Coverage %, steps taken, and elapsed time update at least once per
     second during an active run.
   - All three readouts freeze at their final values on exploration
     completion.
 
-- [ ] **Design polish pass — blueprint HUD direction applied**
+- [x] **Design polish pass — blueprint HUD direction applied**
   - Page matches `docs/DESIGN.md` tokens (palette, Space Mono/Inter type
     pairing, corner-bracket panel framing) at both 1440px and 390px
     widths with no horizontal scroll at either.
@@ -97,13 +97,13 @@ before anything else.
 
 ## Epic 4 — Quality & Deployment
 
-- [ ] **Unit test coverage for the simulation core**
+- [x] **Unit test coverage for the simulation core**
   - The occupancy grid, sensor sweep, frontier detection, and path
     planner each have passing unit tests.
   - At least one test per module exercises an edge case (sensor
     occlusion, an unreachable frontier, a fully-walled-off region).
 
-- [ ] **CI-verified static production build deployable under a subpath**
+- [x] **CI-verified static production build deployable under a subpath**
   - `npm run build` produces a `dist/` directory that serves and runs
     correctly under a non-root base path (e.g. `vite preview --base
 /recon/`), matching the `apps.charliekrug.com/recon` deployment
