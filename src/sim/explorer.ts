@@ -1,5 +1,5 @@
 import { Cell, OccupancyGrid } from "./grid";
-import { floodFillReachable, generateMap } from "./mapgen";
+import { generateMap } from "./mapgen";
 import {
   clusterFrontiers,
   findFrontierCells,
@@ -35,8 +35,11 @@ export function createExploration(
   height: number,
   sensorRange: number,
 ): ExplorationState {
-  const { groundTruth, start } = generateMap(width, height, seed);
-  const reachableCells = floodFillReachable(groundTruth, start);
+  const { groundTruth, start, reachable: reachableCells } = generateMap(
+    width,
+    height,
+    seed,
+  );
 
   const belief = new OccupancyGrid(width, height);
   belief.set(start.x, start.y, Cell.Free);

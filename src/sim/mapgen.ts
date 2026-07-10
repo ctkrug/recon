@@ -5,8 +5,10 @@ export interface GeneratedMap {
   /** Ground truth — only the sensor sweep is allowed to read this. */
   groundTruth: OccupancyGrid;
   start: { x: number; y: number };
-  /** Count of Free cells reachable from `start`; the denominator for coverage. */
-  reachableCount: number;
+  /** Free cells reachable from `start`, keyed `x,y` — the denominator for
+   * coverage. Returned (not just its count) so the caller reuses this exact
+   * set instead of flood-filling the same grid a second time. */
+  reachable: Set<string>;
 }
 
 const WALL_PROBABILITY = 0.42;
@@ -122,5 +124,5 @@ export function generateMap(width: number, height: number, seed: string): Genera
 
   const reachable = floodFillReachable(grid, start);
 
-  return { groundTruth: grid, start, reachableCount: reachable.size };
+  return { groundTruth: grid, start, reachable };
 }

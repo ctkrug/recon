@@ -8,7 +8,7 @@ describe("generateMap", () => {
     const a = generateMap(48, 32, "recon-seed");
     const b = generateMap(48, 32, "recon-seed");
     expect(a.start).toEqual(b.start);
-    expect(a.reachableCount).toBe(b.reachableCount);
+    expect(a.reachable.size).toBe(b.reachable.size);
     for (let y = 0; y < 32; y++) {
       for (let x = 0; x < 48; x++) {
         expect(a.groundTruth.get(x, y)).toBe(b.groundTruth.get(x, y));
@@ -46,8 +46,8 @@ describe("generateMap", () => {
   });
 
   it("reports a positive reachable count for a normally-sized map", () => {
-    const { reachableCount } = generateMap(48, 32, "reachable-check");
-    expect(reachableCount).toBeGreaterThan(0);
+    const { reachable } = generateMap(48, 32, "reachable-check");
+    expect(reachable.size).toBeGreaterThan(0);
   });
 
   it("degrades gracefully instead of throwing for degenerate tiny dimensions", () => {
@@ -60,8 +60,8 @@ describe("generateMap", () => {
       [2, 2],
     ]) {
       expect(() => generateMap(w, h, "tiny-map")).not.toThrow();
-      const { start, reachableCount } = generateMap(w, h, "tiny-map");
-      expect(reachableCount).toBe(0);
+      const { start, reachable } = generateMap(w, h, "tiny-map");
+      expect(reachable.size).toBe(0);
       expect(start).toEqual({ x: Math.floor(w / 2), y: Math.floor(h / 2) });
     }
   });
